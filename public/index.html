@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <title>Photobooth</title>
+    <link rel="stylesheet" href="/static/css/photobooth.css">
+    <style>
+        video, canvas {
+            /** flip the x-axis of the vid **/
+            transform: scaleX(-1);
+            -webkit-transform: scaleX(-1);
+            width: 640px;
+            height: 480px;
+        }
+        div#vidstream {
+            position: relative;
+        }
+        canvas#overlayCanvas {
+            position: absolute;
+            left: 0;
+        }
+        canvas#animationCanvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+    <script src="/static/js/tracking.js"></script>
+    <script src="/static/js/data/face-min.js"></script>
+    <script src="/static/js/headtrackr.js"></script>
+    <script src="/static/js/libs.js"></script>
+	<script>
+
+		function take_snapshot() {
+
+            outctx.drawImage(inputCanvas, 0, 0);
+            outctx.drawImage(overlayCanvas, 0, 0);
+
+            data_uri = outputCanvas.toDataURL("image/jpeg", 1.0);
+			console.log(data_uri);
+		    document.getElementById('result').innerHTML = '<img src="'+data_uri+'"/>';
+		}
+
+		function draw_face_boxes(head) {
+			// draws the boxes around the face etc
+			// face box
+			octx.strokeStyle = "rgba(240,210,50, 0.6)";
+			octx.lineWidth = 2;
+			octx.strokeRect(head.l, head.t, head.w, head.h);
+			// head box
+			octx.strokeStyle = "rgba(240,210,50, 0.2)";
+			octx.lineWidth = 1;
+			//octx.strokeRect(head.bounds.l, head.bounds.t, head.bounds.w, head.bounds.h);
+		}
+
+        function image_overlay(evt) {
+			var head = {
+				l: -(evt.width/2),
+				r: -(evt.width/2)+evt.width,
+				t: -(evt.height/2),
+				b: -(evt.height/2)+evt.height,
+				w: evt.width,
+				h: evt.height,
+				bounds: {
+					l: -(evt.width),
+					r: -(evt.width)+evt.width*2,
+					t: -(evt.height*0.7),
+					b: -(evt.height*0.7)+evt.height*1.4,
+					w: evt.width*2,
+					h: evt.height*1.4
+				}
+			};
+
+
+			//draw_face_boxes(head);
+            octx.clearRect(0,0,640,480);
+			octx.save();
+    		// translate the context to the specific point where you want to draw the boxes.
+    		octx.translate(evt.x, evt.y);
+    		octx.rotate(evt.angle-(Math.PI/2));
+    		draw_face_boxes(head);
+
+            octx.restore();
+        }
+
+        function render() {
+
+
+        }
+	</script>
+
+</head>
+<body>
+    <div id="main">
+        <div id="vidstream">
+            <canvas id="inputCanvas" width="640" height="480" style="display: none;"></canvas>
+            <video id="inputVideo" width="640" height="480" autoplay loop style="z-order: 1;"></video>
+            <canvas id="overlayCanvas" width="640" height="480" style="z-order: 5;"></canvas>
+            <canvas id="animationCanvas" width="640" height="480" style="z-order: 10;"></canvas>
+            <canvas id="outputCanvas" width="640" height="480" style="display: none"></canvas>
+        </div>
+
+        <script type="text/javascript">
+            var inputVideo = document.getElementById('inputVideo');
+            var inputCanvas = document.getElementById('inputCanvas');
+
+            var animationCanvas = document.getElementById('animationCanvas');
+            //var animctx = animationCanvas.getContext('2d');
+
+            var overlayCanvas = document.getElementById('overlayCanvas');
+            var octx = overlayCanvas.getContext('2d');
+
+            var outputCanvas = document.getElementById('outputCanvas');
+            var outctx = outputCanvas.getContext('2d');
+
+            // set the output to be flipped (this makes output like a mirror)
+            outctx.translate(outputCanvas.width, 0);
+            outctx.scale(-1, 1);
+
+            //three_init();
+			//animate();
+
+
+            // set up the head tracker.
+            /**var htracker = new headtrackr.Tracker({
+                ui: false,
+                calcAngles: true
+            });
+
+            htracker.init(inputVideo, inputCanvas);
+            htracker.start();
+			document.addEventListener('facetrackingEvent', image_overlay);**/
+
+            var faces = new tracking.ObjectTracker(['face']);
+            faces.setInitialScale(4);
+            faces.setStepSize(2);
+            faces.setEdgesDensity(0.1);
+
+            faces.on('track', function(event) {
+  				if (event.data.length === 0) {
+    				// No objects were detected in this frame.
+  				} else {
+    				event.data.forEach(function(rect) {
+      				 console.log( rect.x, rect.y, rect.height, rect.width)
+						draw_face_boxes({
+				            l: rect.x,
+                            t: rect.y,
+                            w: rect.width,
+                            h: rect.height,
+                        });
+    				});
+  				}
+			});
+
+			tracking.track(inputVideo, faces, { camera: true });
+
+        </script>
+
+        <a onclick="take_snapshot()">Take Snapshot</a>
+        <div id="result"></div>
+
+</body>
+</html>
