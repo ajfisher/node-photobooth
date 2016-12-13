@@ -1,16 +1,20 @@
 var camera, scene, renderer, particles, geometry, materials = [],
     parameters, i, h, color, sprite, size;
 
+var half_width, half_height;
+
 var heads;
 
-var NO_PARTICLES = 200;
+var NO_PARTICLES = 10;
 
 function three_init() {
 
     var canv = animationCanvas;
+
+    half_width = canv.width / 2;
+    half_height = canv.height / 2;
     //clock = new THREE.Clock();
     scene = new THREE.Scene();
-    //scene.fog = new THREE.FogExp2( 0x000000, 0.0008 );
 
     geometry = new THREE.Geometry();
 
@@ -27,8 +31,6 @@ function three_init() {
 		particle.x = Math.random() * canv.width*2 - canv.width;
 		particle.y = Math.random() * canv.height*2 - canv.height;
 		particle.z = Math.random() * canv.width*2 - canv.width;
-
-        particle.velocity = new THREE.Vector3(0, -Math.random(), 0);
 
 		geometry.vertices.push(particle);
 	}
@@ -48,6 +50,7 @@ function three_init() {
 		size   = parameters[i][2];
 
 		materials[i] = new THREE.PointsMaterial( {
+            color: color,
 			size: size,
 			map: sprite,
             blending: THREE.AdditiveBlending,
@@ -59,9 +62,11 @@ function three_init() {
 
 		particles = new THREE.Points( geometry, materials[i] );
 
-		//particles.rotation.x = Math.random() * 1;
-		//particles.rotation.y = Math.random() * 1;
-		//particles.rotation.z = Math.random() * 7;
+		particles.rotation.x = Math.random() * 1;
+		particles.rotation.y = Math.random() * 1;
+		particles.rotation.z = Math.random() * 7;
+
+        particles.sortParticles = true;
 
 		scene.add( particles );
 	}
@@ -77,24 +82,45 @@ function particle_animator() {
     //
 	var time = Date.now() * 0.00005;
 
-    particles.rotation.y += 0.1;
-    particles.rotation.x += 0.1
+    particles.rotation.y += 0.01;
+    particles.rotation.x += 0.05;
+    particles.rotation.z += 0.01;
 
-    /**
 	for ( i = 0; i < scene.children.length; i ++ ) {
-		var object = scene.children[i];
+    	var object = scene.children[i];
 
-		if ( object instanceof THREE.Points ) {
-			//object.rotation.y = time * ( i < 4 ? i + 1 : - ( i + 1 ) );
-		}
-	}**/
+        if ( object instanceof THREE.Points ) {
 
-/**	for ( i = 0; i < materials.length; i ++ ) {
+            //console.log(object.getWorldPosition());
+            object.geometry.vertices.forEach(function(pt) {
+                // unproject item to screen:
+                var pos = pt.clone();
+                //console.log(pos);
+                pos.project(camera);
 
-		color = parameters[i][0];
-		h = ( 360 * ( color[0] + time ) % 360 ) / 360;
-		materials[i].color.setHSL( h, color[1], color[2] );
-	}**/
+                pos.x = (pos.x * half_width) + half_width;
+                pos.y = - (pos.y * half_height) + half_height;
+                pos.z = 0;
+                
+                //console.log(pos);
+                if (heads) {
+                    heads.forEach(function(head) {
+                        if (pos.x > head.x && pos.x < head.x + head.width &&
+                            pos.y > head.y && pos.y < head.y + head.height) {
+                            console.log(pt);
+                            //console.log(pos, head);
+                            //console.log("particle collision detected");
+                        } else {
+                            //console.log("no particle collision");
+                        }
+                    });
+                }
+            });
+
+
+            //object.rotation.y = time * ( i < 4 ? i + 1 : - ( i + 1 ) );
+        }
+    }
 }
 
 function animate() {
@@ -128,13 +154,11 @@ function overlays() {
 function draw_face_box(head) {
     // draws the boxes around the face etc
     // face box
-    octx.strokeStyle = "rgba(240,210,50, 0.6)";
+    octx.strokeStyle = "rgba(210,50,240, 0.6)";
     octx.lineWidth = 2;
     octx.strokeRect(head.x, head.y, head.width, head.height);
-    // head box
-    octx.strokeStyle = "rgba(240,210,50, 0.2)";
-    octx.lineWidth = 1;
-    //octx.strokeRect(head.bounds.l, head.bounds.t, head.bounds.w, head.bounds.h);
+    octx.fillStyle = "rgba(210, 50, 240, 0.3)";
+    octx.fillRect(head.x, head.y, head.width, head.height);
 }
 
 function take_snapshot() {
