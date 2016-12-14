@@ -5,7 +5,7 @@ var half_width, half_height;
 
 var heads;
 
-var NO_PARTICLES = 10;
+var NO_PARTICLES = 20;
 
 function three_init() {
 
@@ -13,7 +13,6 @@ function three_init() {
 
     half_width = canv.width / 2;
     half_height = canv.height / 2;
-    //clock = new THREE.Clock();
     scene = new THREE.Scene();
 
     geometry = new THREE.Geometry();
@@ -91,34 +90,7 @@ function particle_animator() {
 
         if ( object instanceof THREE.Points ) {
 
-            //console.log(object.getWorldPosition());
-            object.geometry.vertices.forEach(function(pt) {
-                // unproject item to screen:
-                var pos = pt.clone();
-                //console.log(pos);
-                pos.project(camera);
-
-                pos.x = (pos.x * half_width) + half_width;
-                pos.y = - (pos.y * half_height) + half_height;
-                pos.z = 0;
-                
-                //console.log(pos);
-                if (heads) {
-                    heads.forEach(function(head) {
-                        if (pos.x > head.x && pos.x < head.x + head.width &&
-                            pos.y > head.y && pos.y < head.y + head.height) {
-                            console.log(pt);
-                            //console.log(pos, head);
-                            //console.log("particle collision detected");
-                        } else {
-                            //console.log("no particle collision");
-                        }
-                    });
-                }
-            });
-
-
-            //object.rotation.y = time * ( i < 4 ? i + 1 : - ( i + 1 ) );
+            object.rotation.y = time * ( i < 4 ? i + 1 : - ( i + 1 ) );
         }
     }
 }
