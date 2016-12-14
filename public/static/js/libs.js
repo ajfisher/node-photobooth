@@ -7,6 +7,8 @@ var heads;
 
 var NO_PARTICLES = 20;
 
+var countdown = 3;
+
 function three_init() {
 
     var canv = animationCanvas;
@@ -36,7 +38,6 @@ function three_init() {
 
 	parameters = [
 		[ [1.0, 0.2, 0.5], sprite, 7 ],
-		[ [0.95, 0.1, 0.5], sprite, 10 ],
 		[ [0.90, 0.05, 0.5], sprite, 5 ],
 		[ [0.85, 0, 0.5], sprite, 15 ],
 		[ [0.80, 0, 0.5], sprite, 24 ]
@@ -150,3 +151,19 @@ function take_snapshot() {
     };
 }
 
+function do_countdown() {
+    // do the countdown process
+
+    var countdown_obj = document.getElementById("countdown");
+
+    if (countdown == 0) {
+        countdown_obj.innerHTML = "";
+        countdown = 3;
+        take_snapshot();
+    } else {
+        countdown_obj.innerHTML = countdown;
+        countdown--;
+        setTimeout(do_countdown, 1000);
+    }
+
+}

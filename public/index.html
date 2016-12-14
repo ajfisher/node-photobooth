@@ -27,11 +27,13 @@
             top: 0;
         }
     </style>
+    <script src="/mqtt.js"></script>
     <script src="/static/js/three.min.js"></script>
     <script src="/static/js/tracking.js"></script>
     <script src="/static/js/data/face-min.js"></script>
     <script src="/static/js/headtrackr.js"></script>
     <script src="/static/js/libs.js"></script>
+    <script src="/static/js/messaging.js"></script>
 
 </head>
 <body>
@@ -58,7 +60,6 @@
             outctx.translate(outputCanvas.width, 0);
             outctx.scale(-1, 1);
 
-
             var faces = new tracking.ObjectTracker(['face']);
             faces.setInitialScale(4);
             faces.setStepSize(2);
@@ -80,7 +81,8 @@
 
         </script>
 
-        <a onclick="take_snapshot()">Take Snapshot</a>
+        <p><a onclick="do_countdown()">Take Snapshot</a></p>
+        <p id="countdown"></p>
         <div id="result"></div>
 
 </body>

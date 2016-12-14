@@ -1,22 +1,32 @@
+'use strict'
 var express = require('express');
-var http = require('http');
 var mosca = require('mosca');
-var path = require("path");
 
 var app = express();
-var srv = http.createServer(app);
 
-var mqtt_server = new mosca.Server({});
-mqtt_server.attachHttpServer(srv);
+var moscaSettings = {
+    host: '0.0.0.0',
+    port: 1883,
+    http: {
+        port: 3000,
+        host: '0.0.0.0',
+        static: './public/',
+        bundle: true,
+    },
+};
 
-app.use(express.static('public'));
-app.use('/static', express.static('static'));
-app.use(express.static(path.dirname(require.resolve("mosca")) + "/public"));
+var mqtt_server = new mosca.Server(moscaSettings);
 
-app.listen(3000, () => {
-    console.log("Server running on localhost:3000");
+mqtt_server.on('ready', () => {
+    console.log("MQTT server is ready on port %s", moscaSettings.port);
+    console.log("HTTP Server is ready on pott %s", moscaSettings.http.port);
 });
 
-app.get('/', (req, res) => {
-    res.send("hi there");
+mqtt_server.on('clientConnected', (client) => {
+    console.log('client has connected', client.id);
 });
+
+mqtt_server.on('published', function(packet, client) {
+  console.log('Published', packet.payload);
+});
+
