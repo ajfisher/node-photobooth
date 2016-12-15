@@ -1,3 +1,5 @@
+var inputVideo, animationCanvas, overlayCanvas, octx, outputCanvas, outctx, faces;
+
 var camera, scene, renderer, particles, geometry, materials = [],
     parameters, i, h, color, sprite, size;
 
@@ -12,6 +14,7 @@ var countdown = 3;
 function three_init() {
 
     var canv = animationCanvas;
+    console.log(canv.width, canv.height);
 
     half_width = canv.width / 2;
     half_height = canv.height / 2;
@@ -29,9 +32,9 @@ function three_init() {
 	for ( i = 0; i < NO_PARTICLES; i ++ ) {
 
 		var particle = new THREE.Vector3();
-		particle.x = Math.random() * canv.width*2 - canv.width;
-		particle.y = Math.random() * canv.height*2 - canv.height;
-		particle.z = Math.random() * canv.width*2 - canv.width;
+		particle.x = (Math.random() * canv.width*2 - canv.width) * 1.25;
+		particle.y = (Math.random() * canv.height*2 - canv.height) * 1.25;
+		particle.z = (Math.random() * canv.width*2 - canv.width) * 1.25;
 
 		geometry.vertices.push(particle);
 	}
@@ -137,17 +140,19 @@ function draw_face_box(head) {
 function take_snapshot() {
 
     animate();
-    //var animFrameDataURI = renderer.domElement.toDataURL('image/png');
     var img = new Image;
     img.src = renderer.domElement.toDataURL('image/png');;
 
     img.onload = function() {
         outctx.drawImage(inputVideo, 0, 0);
-        outctx.drawImage(overlayCanvas, 0, 0);
-        outctx.drawImage(img, 0, 0);
+        outctx.drawImage(overlayCanvas, 0, 0, 480, 360, 0, 0, 640, 480);
+        outctx.drawImage(img, 0, 0, 480, 360, 0, 0, 640, 480);
 
         data_uri = outputCanvas.toDataURL("image/jpeg", 1.0);
-        document.getElementById('result').innerHTML = '<img src="'+data_uri+'"/>';
+        var i = document.createElement('img');
+        i.setAttribute('src', data_uri);
+        document.getElementById('c-results').appendChild(i);
+        //document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
     };
 }
 
@@ -172,15 +177,38 @@ function send_image() {
 
     var email = document.getElementById("email").value;
 
+    var images = document.querySelectorAll('#c-results img');
+
+    var payload_images = [];
+
+    if (images.length > 0) {
+        images.forEach(function(img) {
+            payload_images.push(img.src);
+        });
+    }
+
     var payload = {
         email: email,
-        image: document.querySelector('#result img').src,
+        images: payload_images,
     };
 
-    console.log(payload);
     messaging.client.publish("photobooth/ic/mail", JSON.stringify(payload));
-    status_update("Sending photo...");
+    status_update("Sending photos...");
+}
 
+function close_panel() {
+
+    var send_panel = document.getElementById("c-send-panel");
+    send_panel.classList.remove("show");
+    send_panel.classList.add("hide");
+}
+
+function capture_email() {
+
+    var send_panel = document.getElementById("c-send-panel");
+
+    send_panel.classList.add("show");
+    send_panel.classList.remove("hide");
 }
 
 function status_update(message) {
@@ -195,6 +223,39 @@ function photobooth_init() {
 
     // add the status update callback for when we get messages to display them
     messaging.status_notifier(status_update);
+
+	inputVideo = document.getElementById('inputVideo');
+
+	animationCanvas = document.getElementById('animationCanvas');
+
+	overlayCanvas = document.getElementById('overlayCanvas');
+	octx = overlayCanvas.getContext('2d');
+
+	outputCanvas = document.getElementById('outputCanvas');
+	outctx = outputCanvas.getContext('2d');
+
+	// set the output to be flipped (this makes output like a mirror)
+	outctx.translate(outputCanvas.width, 0);
+	outctx.scale(-1, 1);
+
+	faces = new tracking.ObjectTracker(['face']);
+	faces.setInitialScale(4);
+	faces.setStepSize(2);
+	faces.setEdgesDensity(0.1);
+
+	faces.on('track', function(event) {
+		if (event.data.length === 0) {
+			// No objects were detected in this frame.
+		} else {
+			heads = event.data;
+		}
+	});
+
+	tracking.track(inputVideo, faces, { camera: true });
+
+	// start up the animation etc.
+	three_init();
+	animate();
 
 }
 

@@ -40,57 +40,59 @@ mqtt_client.on('message', (topic, message) => {
 
     var maildata = JSON.parse(message.toString());
 
-    var base64Data = maildata.image.replace(/^data:image\/jpeg;base64,/, "");
-    base64Data += base64Data.replace('+', ' ');
+    let m_o = mail_options;
+    m_o["to"] = maildata.email;
+    m_o["text"] = `We took a photo on the PhotoBooth. Here it is.`;
+    // neat - we can just use the same dataURL - FTW!
+    var attachments = [];
 
-    var binData = new Buffer(base64Data, 'base64').toString('binary');
+    // iterate over the images, save them and add them to the mail attachments
 
-    var filename = "outputImages/" + uuid.v4() + ".jpg";
+    maildata.images.forEach((image) => {
 
-    fs.writeFile(filename, binData, "binary", function (err) {
+        let base64Data = image.replace(/^data:image\/jpeg;base64,/, "");
+        base64Data += base64Data.replace('+', ' ');
 
-        if (err) {
-            console.log(err); // writes out file without error
-            mqtt_client.publish("photobooth/sys/error", "File not saved to disk");
-            mqtt_client.publish("photobooth/oc/mail/status", JSON.stringify({
-                code: "send_fail",
-                msg: "File was not saved to disk",
-            }) );
+        let bindata = new Buffer(base64Data, 'base64').toString('binary');
+
+        let filename = "outputImages/" + uuid.v4() + ".jpg";
+
+        try {
+            fs.writeFileSync(filename, bindata, "binary");
+        } catch (e) {
+            console.log("there was an issue with " + filename);
             return;
-
         }
 
-        let m_o = mail_options;
-        m_o["to"] = maildata.email;
-        m_o["text"] = `We took a photo on the PhotoBooth. Here it is.`;
-        // neat - we can just use the same dataURL - FTW!
-        m_o["attachments"] = [ { path: maildata.image }, ];
+        attachments.push( { path: image } );
+    });
 
-        transporter.sendMail(m_o, (err, info) => {
-            // send the mail off and then generate appropriate messaging where needed.
-            if (err) {
-                console.log(err);
-                mqtt_client.publish("photobooth/sys/error", "Email could not be sent");
-                mqtt_client.publish("photobooth/oc/mail/status", JSON.stringify({
-                    code: "send_fail",
-                    msg: "Email couldn't be sent: " + err,
-                }) );
-                return;
-            }
+    m_o["attachments"] = attachments;
 
-            if (info.response.indexOf("OK") > 0) {
-                console.log("Message to %s sent ok", maildata.email);
-                mqtt_client.publish("photobooth/oc/mail/status", JSON.stringify({
-                    code: "sent",
-                    msg: "Email sent to " + maildata.email,
-                }) );
-            } else {
-                console.log("Message to %s send issue: %s", maildata.email, info.response);
-                mqtt_client.publish("photobooth/oc/mail/status", JSON.stringify({
-                    code: "send_fail",
-                    msg: "Email couldn't be sent " + info.response,
-                }) );
-            }
-        });
+    transporter.sendMail(m_o, (err, info) => {
+        // send the mail off and then generate appropriate messaging where needed.
+        if (err) {
+            console.log(err);
+            mqtt_client.publish("photobooth/sys/error", "Email could not be sent");
+            mqtt_client.publish("photobooth/oc/mail/status", JSON.stringify({
+                code: "send_fail",
+                msg: "Email couldn't be sent: " + err,
+            }) );
+            return;
+        }
+
+        if (info.response.indexOf("OK") > 0) {
+            console.log("Message to %s sent ok", maildata.email);
+            mqtt_client.publish("photobooth/oc/mail/status", JSON.stringify({
+                code: "sent",
+                msg: "Email sent to " + maildata.email,
+            }) );
+        } else {
+            console.log("Message to %s send issue: %s", maildata.email, info.response);
+            mqtt_client.publish("photobooth/oc/mail/status", JSON.stringify({
+                code: "send_fail",
+                msg: "Email couldn't be sent " + info.response,
+            }) );
+        }
     });
 });
