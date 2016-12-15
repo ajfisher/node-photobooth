@@ -1,0 +1,106 @@
+/** This is the base style sheet for the black book application,.
+It uses SASS to produce the CSS file. Do NOT edit the css file this outputs
+or it will get blown away.
+**/
+/** normalise / default styles **/
+p {
+  font-size: 2rem; }
+
+html {
+  color: #000000;
+  font-size: 60.5%;
+  height: 100%;
+  box-sizing: border-box; }
+
+*, *:before, *:after {
+  box-sizing: inherit; }
+
+body {
+  color: #000000;
+  margin: 0;
+  font: 2.4rem "Helvetica Neue", Helvetica, Arial, sans-serif;
+  height: 100%; }
+
+/** helpers **/
+.show {
+  display: initial; }
+
+.hide {
+  display: none; }
+
+/** LAYOUT **/
+main {
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end; }
+  main article {
+    width: 60%;
+    background: red; }
+  main aside {
+    width: 25%;
+    background: green;
+    overflow: scroll; }
+
+/** COMPONENT DEFINITIONS **/
+#c-camera div#vidstream {
+  position: relative; }
+  #c-camera div#vidstream video, #c-camera div#vidstream canvas {
+    /** flip the x-axis of the vid **/
+    transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    width: 480px;
+    height: 360px; }
+  #c-camera div#vidstream canvas#overlayCanvas {
+    position: absolute;
+    left: 0;
+    top: 0; }
+  #c-camera div#vidstream canvas#animationCanvas {
+    position: absolute;
+    left: 0;
+    top: 0; }
+#c-camera p {
+  text-align: center; }
+
+#c-results img {
+  width: 100%;
+  padding: 1.2rem;
+  padding-bottom: 0;
+  display: block; }
+#c-results img:last-child {
+  padding-bottom: 1.2rem; }
+
+div#c-send-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: white;
+  transform: translate(-50%, -50%);
+  -webkit-box-shadow: 0px 0.5rem 1rem 0px rgba(50, 50, 50, 0.5);
+  -moz-box-shadow: 0px 0.5rem 1rem 0px rgba(50, 50, 50, 0.5);
+  box-shadow: 0px 0.5rem 1rem 0px rgba(50, 50, 50, 0.5); }
+  div#c-send-panel a.close {
+    position: absolute;
+    margin-left: -0.5rem;
+    margin-top: -1.1rem;
+    display: block;
+    cursor: pointer; }
+  div#c-send-panel p {
+    margin: 0;
+    padding: 2rem; }
+
+div#message {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translate(-50%, 0);
+  background: white;
+  opacity: 0.7;
+  -webkit-box-shadow: 0px 0.5rem 1rem 0px rgba(50, 50, 50, 0.5);
+  -moz-box-shadow: 0px 0.5rem 1rem 0px rgba(50, 50, 50, 0.5);
+  box-shadow: 0px 0.5rem 1rem 0px rgba(50, 50, 50, 0.5); }
+  div#message p {
+    margin: 0;
+    padding: 1rem; }
+
+/*# sourceMappingURL=photobooth.css.map */

@@ -1,2 +1,2 @@
 #!/bin/sh
-sass --watch ./scss/:../public/static/
+sass --watch ./scss/:../public/static/css/
