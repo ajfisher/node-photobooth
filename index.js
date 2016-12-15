@@ -3,7 +3,6 @@ var express = require('express');
 var mosca = require('mosca');
 
 var config = require('./config.json');
-console.log(config);
 
 var app = express();
 
@@ -30,6 +29,6 @@ mqtt_server.on('clientConnected', (client) => {
 });
 
 mqtt_server.on('published', function(packet, client) {
-  console.log('Published', packet.payload.toString());
+//  console.log('Published', packet.payload.toString());
 });
 

@@ -32,8 +32,8 @@
     <script src="/static/js/tracking.js"></script>
     <script src="/static/js/data/face-min.js"></script>
     <script src="/static/js/headtrackr.js"></script>
-    <script src="/static/js/libs.js"></script>
     <script src="/static/js/messaging.js"></script>
+    <script src="/static/js/libs.js"></script>
 
 </head>
 <body>
@@ -83,7 +83,23 @@
 
         <p><a onclick="do_countdown()">Take Snapshot</a></p>
         <p id="countdown"></p>
+        <p>
+            <label for="email">Email address</label>
+            <input type="text" name="email" id="email" value="ajfisher.td+test@gmail.com"/>
+            <input type="button" name="send" value="send" id="send" onclick="send_image()"/>
+        </p>
+        <div id="message">
+            <p id="status"></p>
+        </div>
         <div id="result"></div>
+    </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            // effective on ready call
+            console.log("loaded handler");
+            photobooth_init();
+        });
+    </script>
 </body>
 </html>

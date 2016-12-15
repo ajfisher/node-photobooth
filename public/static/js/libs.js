@@ -167,3 +167,35 @@ function do_countdown() {
     }
 
 }
+
+function send_image() {
+
+    var email = document.getElementById("email").value;
+
+    var payload = {
+        email: email,
+        image: document.querySelector('#result img').src,
+    };
+
+    console.log(payload);
+    messaging.client.publish("photobooth/ic/mail", JSON.stringify(payload));
+    status_update("Sending photo...");
+
+}
+
+function status_update(message) {
+    // updates the status bar with the current message
+    var messagebar = document.getElementById('message');
+    messagebar.classList.add('visible');
+    document.getElementById('status').innerHTML = message;
+}
+
+function photobooth_init() {
+    // run this to initialise various callbacks etc.
+
+    // add the status update callback for when we get messages to display them
+    messaging.status_notifier(status_update);
+
+}
+
+
