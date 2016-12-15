@@ -52,6 +52,15 @@ main {
         width: 25%;
         background: green;
         overflow: scroll;
+
+        p {
+            text-align: center;
+
+            a {
+                background: #c0c0c0;
+                cursor: pointer;
+            }
+        }
     }
 }
 
@@ -127,7 +136,11 @@ div#message {
     left: 50%;
     transform: translate(-50%, 0);
     background: white;
-    opacity: 0.7;
+
+    &.fadeout {
+        opacity: 1;
+        animation: fadeout 5s linear 1 forwards;
+    }
 
 	@include shadow;
 
@@ -135,4 +148,9 @@ div#message {
         margin: 0;
         padding: 1rem;
     }
+}
+
+@keyframes fadeout {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
 }

@@ -41,6 +41,11 @@ main {
     width: 25%;
     background: green;
     overflow: scroll; }
+    main aside p {
+      text-align: center; }
+      main aside p a {
+        background: #c0c0c0;
+        cursor: pointer; }
 
 /** COMPONENT DEFINITIONS **/
 #c-camera div#vidstream {
@@ -95,12 +100,20 @@ div#message {
   left: 50%;
   transform: translate(-50%, 0);
   background: white;
-  opacity: 0.7;
   -webkit-box-shadow: 0px 0.5rem 1rem 0px rgba(50, 50, 50, 0.5);
   -moz-box-shadow: 0px 0.5rem 1rem 0px rgba(50, 50, 50, 0.5);
   box-shadow: 0px 0.5rem 1rem 0px rgba(50, 50, 50, 0.5); }
+  div#message.fadeout {
+    opacity: 1;
+    animation: fadeout 5s linear 1 forwards; }
   div#message p {
     margin: 0;
     padding: 1rem; }
+
+@keyframes fadeout {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0; } }
 
 /*# sourceMappingURL=photobooth.css.map */

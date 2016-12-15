@@ -194,6 +194,8 @@ function send_image() {
 
     messaging.client.publish("photobooth/ic/mail", JSON.stringify(payload));
     status_update("Sending photos...");
+
+    close_panel();
 }
 
 function close_panel() {
@@ -214,8 +216,16 @@ function capture_email() {
 function status_update(message) {
     // updates the status bar with the current message
     var messagebar = document.getElementById('message');
-    messagebar.classList.add('visible');
+    messagebar.classList.remove('hide');
+    messagebar.classList.add('show');
+    messagebar.classList.add('fadeout');
     document.getElementById('status').innerHTML = message;
+
+    window.setTimeout(function() {
+        messagebar.classList.remove("show");
+        messagebar.classList.remove("fadeout");
+        messagebar.classList.add("hide");
+    }, 4800);
 }
 
 function photobooth_init() {
