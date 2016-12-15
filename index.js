@@ -2,6 +2,9 @@
 var express = require('express');
 var mosca = require('mosca');
 
+var config = require('./config.json');
+console.log(config);
+
 var app = express();
 
 var moscaSettings = {
