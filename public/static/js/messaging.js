@@ -9,16 +9,15 @@ function Messaging() {
 
     this.client = mqtt.connect();
 
-    this.client.subscribe("hardware/#");
+    this.client.subscribe("photobooth/oc/hardware/#");
 
     this.hardware_available = false;
 
     this.client.on('message', function(topic, payload) {
-
-        if (topic.indexOf("hardware/available") ) {
+        if (topic.indexOf("hardware/available") >= 0 ) {
             this.hardware_available = (payload.toString() === 'true');
         }
-    });
+    }.bind(this));
 
 }
 
