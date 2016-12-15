@@ -5,21 +5,22 @@
 
 function Messaging() {
 
-/**    this.server = "mqtt://localhost:1883";
+    //this.server = "mqtt://localhost:1883";
 
-    this.client = mqtt.connect(this.server);
+    this.client = mqtt.connect();
 
-    console.log(this.client);
     this.client.subscribe("hardware/#");
 
+    this.hardware_available = false;
 
     this.client.on('message', function(topic, payload) {
-        console.log(topic, payload);
+
+        if (topic.indexOf("hardware/available") ) {
+            this.hardware_available = (payload.toString() === 'true');
+        }
     });
 
-    this.client.publish("hardware/test", "This is a test");
-**/
 }
 
-
 var messaging = new Messaging();
+
