@@ -13,7 +13,8 @@ $base-green-dark: #0B4D17;
 $base-green-ultradark: #0B4D17;
 
 
-$text-colour: $base-red-dark;
+$text-colour: #000;
+$light-text-colour: rgba(255, 255, 255, 0.5);
 
 $sans-font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 
@@ -42,4 +43,9 @@ $sans-font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 /** normalise / default styles **/
 p {
 	font-size: 2rem;
+}
+
+/** reset for chrome auto styles **/
+input:focus {
+    outline: none;
 }

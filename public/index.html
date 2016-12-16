@@ -42,7 +42,9 @@
             <ul id="c-results">
             </ul>
             <p class="hide">
-                <a class="c-button" onclick="capture_email()">Send email</a>
+                <a class="c-button" onclick="capture_email()">
+                    <i class="fa fa-envelope-o"></i> Send
+                </a>
             </p>
         </aside>
     </main>
@@ -50,11 +52,14 @@
         <p id="status">This is a test message</p>
     </div>
     <div id="c-send-panel" class="hide">
-        <a class="close" onclick="close_panel()">X</a>
+        <a class="close" onclick="close_panel()"><i class="fa fa-times-circle"></i></a>
         <p>
-            <label for="email">Email</label>
-            <input type="text" name="email" id="email" value="ajfisher.td+test@gmail.com"/>
-            <input type="button" name="send" value="send" id="send" onclick="send_image()"/>
+            <label for="email"><i class="fa fa-envelope-o"></i></label>
+            <input type="text" name="email" id="email" value="ajfisher.td+test@gmail.com"
+            placeholder="Email address"/>
+            <a class="c-button" onclick="send_image()">
+                <i class="fa fa-arrow-right"></i>
+            </a>
         </p>
     </div>
     <script>
