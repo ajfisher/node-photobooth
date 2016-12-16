@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
     <title>Photobooth</title>
+    <link rel="stylesheet" href="/static/css/font-awesome.css">
     <link rel="stylesheet" href="/static/css/photobooth.css">
     <style>
     </style>
@@ -28,19 +29,24 @@
                     <canvas id="outputCanvas" width="640" height="480" style="display: none"></canvas>
                 </div>
 
-                <p><a id="takephoto" class="c-button" onclick="do_countdown()">Take Photo</a></p>
+                <p>
+                    <a id="takephoto" title="Press to take photo"
+                        class="c-button" onclick="do_countdown()">
+                        <i class="fa fa-camera"></i>
+                    </a>
+                </p>
                 <p id="countdown"></p>
             </div>
         </article>
         <aside>
-            <div id="c-results">
-            </div>
-            <p>
+            <ul id="c-results">
+            </ul>
+            <p class="hide">
                 <a class="c-button" onclick="capture_email()">Send email</a>
             </p>
         </aside>
     </main>
-    <div id="message">
+    <div id="message" class="hide">
         <p id="status">This is a test message</p>
     </div>
     <div id="c-send-panel" class="hide">

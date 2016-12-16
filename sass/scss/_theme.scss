@@ -1,5 +1,19 @@
 
-$text-colour: #000000;
+// basic definitions
+$base-red: #AA4139;
+$base-red-light: #EF847C;
+$base-red-ultralight: #FFAAA3;
+$base-red-dark: #65150F;
+$base-red-ultradark: #310401;
+
+$base-green: #2B823A;
+$base-green-light: #5FB76E;
+$base-green-ultralight: #8DDD9B;
+$base-green-dark: #0B4D17;
+$base-green-ultradark: #0B4D17;
+
+
+$text-colour: $base-red-dark;
 
 $sans-font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 
@@ -7,6 +21,22 @@ $sans-font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     -webkit-box-shadow: 0px 0.5rem 1rem 0px rgba(50, 50, 50, 0.5);
     -moz-box-shadow:    0px 0.5rem 1rem 0px rgba(50, 50, 50, 0.5);
     box-shadow:         0px 0.5rem 1rem 0px rgba(50, 50, 50, 0.5);
+}
+
+@mixin radial-background($from, $to) {
+    /* fallback */
+    background-color: $from;
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    /* Safari 5.1+, Chrome 10+ */
+    background: -webkit-radial-gradient(circle, $from, $to);
+
+    /* Firefox 3.6+ */
+    background: -moz-radial-gradient(circle, $from, $to);
+
+    /* IE 10 */
+    background: -ms-radial-gradient(circle, $from, $to);
 }
 
 /** normalise / default styles **/

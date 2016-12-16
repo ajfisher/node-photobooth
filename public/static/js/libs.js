@@ -41,9 +41,8 @@ function three_init() {
 
 	parameters = [
 		[ [1.0, 0.2, 0.5], sprite, 7 ],
-		[ [0.90, 0.05, 0.5], sprite, 5 ],
-		[ [0.85, 0, 0.5], sprite, 15 ],
-		[ [0.80, 0, 0.5], sprite, 24 ]
+		[ [0.90, 0.05, 0.5], sprite, 15 ],
+		[ [0.85, 0, 0.5], sprite, 24 ],
 	];
 
 	for ( i = 0; i < parameters.length; i ++ ) {
@@ -149,17 +148,24 @@ function take_snapshot() {
         outctx.drawImage(img, 0, 0, 480, 360, 0, 0, 640, 480);
 
         data_uri = outputCanvas.toDataURL("image/jpeg", 1.0);
+
+        var li = document.createElement('li');
         var i = document.createElement('img');
         i.setAttribute('src', data_uri);
-        document.getElementById('c-results').appendChild(i);
-        //document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';
+        li.appendChild(i);
+
+        document.getElementById('c-results').appendChild(li);
     };
+
+    document.querySelector('aside p').classList.remove("hide");
 }
 
 function do_countdown() {
     // do the countdown process
 
     var countdown_obj = document.getElementById("countdown");
+    countdown_obj.classList.remove("shrinktext");
+    void countdown_obj.offsetWidth; // trigger reset for animation
 
     if (countdown == 0) {
         countdown_obj.innerHTML = "";
@@ -168,7 +174,8 @@ function do_countdown() {
     } else {
         countdown_obj.innerHTML = countdown;
         countdown--;
-        setTimeout(do_countdown, 1000);
+        countdown_obj.classList.add("shrinktext");
+        setTimeout(do_countdown, 900);
     }
 
 }
