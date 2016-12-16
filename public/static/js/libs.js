@@ -7,6 +7,32 @@ var half_width, half_height;
 
 var heads;
 
+var propdir = "/static/img/"
+var props = {
+    hat: {
+        file: propdir + "santahat2.svg",
+        img: new Image(),
+        origin: {
+            x: 280, y: 130,
+        },
+        ref: {
+            width: 240,
+        },
+    },
+    elfhat: {
+        file: propdir + "elf_hat.svg",
+        img: new Image(),
+        origin: {
+            x: 0, y: 120,
+        },
+        ref: {
+            width: 110,
+        },
+    },
+};
+
+var current_prop = props.elfhat;
+
 var NO_PARTICLES = 20;
 
 var countdown = 3;
@@ -14,7 +40,6 @@ var countdown = 3;
 function three_init() {
 
     var canv = animationCanvas;
-    console.log(canv.width, canv.height);
 
     half_width = canv.width / 2;
     half_height = canv.height / 2;
@@ -118,12 +143,24 @@ function overlays() {
         heads.forEach(function(head) {
             octx.save();
             // translate the context to the specific point where you want to draw the boxes.
-            //octx.translate(head.x, head.y);
-            draw_face_box(head);
+            draw_prop(current_prop, head, octx);
+            //draw_face_box(head);
 
             octx.restore();
         });
     }
+}
+
+function draw_prop(prop, head, ctx) {
+
+    // given head and prop, add it to the overlay
+    var sf = head.width / prop.ref.width; // determine scale factor based on head size
+    var dw = prop.img.width * sf;
+    var dh = prop.img.height * sf;
+    var dx = head.x - (prop.origin.x * sf);
+    var dy = head.y - (prop.origin.y * sf);
+    ctx.drawImage(prop.img, dx, dy, dw, dh);
+
 }
 
 function draw_face_box(head) {
@@ -166,7 +203,7 @@ function take_snapshot() {
         document.getElementById('c-results').appendChild(li);
     };
 
-    document.querySelector('aside p').classList.remove("hide");
+    document.querySelector('#img-controls').classList.remove("hide");
 }
 
 function remove_image(el) {
@@ -177,10 +214,19 @@ function remove_image(el) {
     results_list.removeChild(li);
 
     if (document.querySelectorAll("ul#c-results li").length == 0) {
-        document.querySelector('aside p').classList.add("hide");
+        document.querySelector('#img-controls').classList.add("hide");
     }
 }
 
+function clear_all_images() {
+    // removes all of the images from the result lists
+
+    Array.prototype.slice.call(document.querySelectorAll("ul#c-results li")).forEach(function(el) {
+        el.parentElement.removeChild(el);
+    });
+
+    document.querySelector('#img-controls').classList.add("hide");
+}
 
 function do_countdown() {
     // do the countdown process
@@ -259,6 +305,19 @@ function status_update(message) {
 
 function photobooth_init() {
     // run this to initialise various callbacks etc.
+
+    // load the various images in.
+    for (var prop in props) {
+        if (props.hasOwnProperty(prop)) {
+
+            var p = props[prop];
+            p.img.src = p.file;
+
+            p.onLoad = function(i) {
+
+            }(p.img);
+        }
+    }
 
     // add the status update callback for when we get messages to display them
     messaging.status_notifier(status_update);

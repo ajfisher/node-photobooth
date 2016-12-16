@@ -53,13 +53,15 @@ main {
   main aside {
     width: 25%;
     overflow: scroll; }
-    main aside p {
+    main aside div#img-controls {
       text-align: center;
       margin: 0;
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 3rem; }
-      main aside p a {
-        cursor: pointer; }
+      color: rgba(255, 255, 255, 0.5); }
+      main aside div#img-controls p {
+        font-size: 3rem;
+        margin: 1.3rem 0; }
+        main aside div#img-controls p a {
+          cursor: pointer; }
 
 /** COMPONENT DEFINITIONS **/
 #c-camera div#vidstream {
@@ -80,7 +82,7 @@ main {
     top: 0; }
 #c-camera p {
   text-align: center;
-  font-size: 8rem;
+  font-size: 6rem;
   padding: 0;
   margin: 0; }
   #c-camera p a {
@@ -119,7 +121,8 @@ ul#c-results {
       left: 0.6rem;
       top: 0rem;
       font-size: 3rem;
-      cursor: pointer; }
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.5); }
 
 div#c-send-panel {
   position: absolute;

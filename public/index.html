@@ -13,7 +13,6 @@
     <script src="/static/js/three.min.js"></script>
     <script src="/static/js/tracking.js"></script>
     <script src="/static/js/data/face-min.js"></script>
-    <script src="/static/js/headtrackr.js"></script>
     <script src="/static/js/messaging.js"></script>
     <script src="/static/js/libs.js"></script>
 
@@ -41,11 +40,18 @@
         <aside>
             <ul id="c-results">
             </ul>
-            <p class="hide">
-                <a class="c-button" onclick="capture_email()">
-                    <i class="fa fa-envelope-o"></i> Send
-                </a>
-            </p>
+            <div id="img-controls" class="hide">
+                <p>
+                    <a class="c-button" onclick="capture_email()">
+                        <i class="fa fa-envelope-o fa-fw"></i> Send
+                    </a>
+                </p>
+                <p>
+                    <a class="c-button" onclick="clear_all_images()">
+                        <i class="fa fa-times-circle fa-fw"></i> Clear
+                    </a>
+                </p>
+            </div>
         </aside>
     </main>
     <div id="message" class="hide">

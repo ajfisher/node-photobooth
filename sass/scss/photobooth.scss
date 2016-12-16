@@ -53,14 +53,18 @@ main {
         width: 25%;
         overflow: scroll;
 
-        p {
+        div#img-controls {
             text-align: center;
             margin: 0;
             color: $light-text-colour;
-            font-size: 3rem;
 
-            a {
-                cursor: pointer;
+            p {
+                font-size: 3rem;
+                margin: 1.3rem 0;
+
+                a {
+                    cursor: pointer;
+                }
             }
         }
     }
@@ -92,7 +96,7 @@ main {
 
     p {
         text-align: center;
-        font-size: 8rem;
+        font-size: 6rem;
         padding: 0;
         margin: 0;
 
@@ -148,6 +152,7 @@ ul#c-results {
             top: 0rem;
             font-size: 3rem;
             cursor: pointer;
+            color: $light-text-colour;
         }
     }
 }
