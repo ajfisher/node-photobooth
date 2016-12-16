@@ -107,12 +107,19 @@ ul#c-results {
   padding: 0; }
   ul#c-results li {
     padding: 1.2rem;
-    padding-bottom: 0; }
+    padding-bottom: 0;
+    position: relative; }
     ul#c-results li img {
       width: 100%;
       display: block; }
     ul#c-results li:last-child {
       padding-bottom: 1.2rem; }
+    ul#c-results li a {
+      position: absolute;
+      left: 0.6rem;
+      top: 0rem;
+      font-size: 3rem;
+      cursor: pointer; }
 
 div#c-send-panel {
   position: absolute;

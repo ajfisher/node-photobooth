@@ -149,7 +149,16 @@ function take_snapshot() {
 
         data_uri = outputCanvas.toDataURL("image/jpeg", 1.0);
 
+        // create the container to display the items
         var li = document.createElement('li');
+
+        // create the delete link
+        var dl = document.createElement('a');
+        dl.setAttribute("onclick", "remove_image(this)");
+        dl.innerHTML = "<i class=\"fa fa-times-circle\"></i>";
+        li.appendChild(dl);
+
+        // create the image object
         var i = document.createElement('img');
         i.setAttribute('src', data_uri);
         li.appendChild(i);
@@ -159,6 +168,19 @@ function take_snapshot() {
 
     document.querySelector('aside p').classList.remove("hide");
 }
+
+function remove_image(el) {
+    // remove the image from the results list
+
+    var li = el.parentElement;
+    var results_list = li.parentElement;
+    results_list.removeChild(li);
+
+    if (document.querySelectorAll("ul#c-results li").length == 0) {
+        document.querySelector('aside p').classList.add("hide");
+    }
+}
+
 
 function do_countdown() {
     // do the countdown process

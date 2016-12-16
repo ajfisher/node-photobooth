@@ -130,6 +130,7 @@ ul#c-results {
     li {
         padding: 1.2rem;
         padding-bottom: 0;
+        position: relative;
 
         img {
             width: 100%;
@@ -139,6 +140,14 @@ ul#c-results {
 
         &:last-child {
             padding-bottom: 1.2rem;
+        }
+
+        a {
+            position: absolute;
+            left: 0.6rem;
+            top: 0rem;
+            font-size: 3rem;
+            cursor: pointer;
         }
     }
 }
