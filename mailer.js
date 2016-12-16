@@ -13,7 +13,7 @@ var transporter = nodemailer.createTransport(smtpstring);
 
 var mail_options = {
     from: '"PhotoBooth" <ajfisher@rocketmelbourne.com>',
-    subject: 'Check out my photobooth photo',
+    subject: 'Check out my photobooth pics',
 };
 
 var mqtt_client = mqtt.connect();
@@ -48,6 +48,9 @@ mqtt_client.on('message', (topic, message) => {
 
     // iterate over the images, save them and add them to the mail attachments
 
+    var attach_err = false;
+    var attach_err_msg = "";
+
     maildata.images.forEach((image) => {
 
         let base64Data = image.replace(/^data:image\/jpeg;base64,/, "");
@@ -61,12 +64,23 @@ mqtt_client.on('message', (topic, message) => {
             fs.writeFileSync(filename, bindata, "binary");
         } catch (e) {
             console.log("there was an issue with " + filename);
-            return;
+            attach_err = true;
+            attach_err_msg = e;
         }
 
+        // we can still push the image though if we have it as data url
         attachments.push( { path: image } );
     });
 
+    if (attach_err) {
+        mqtt_client.publish("photobooth/sys/error", "File could not be saved");
+        mqtt_client.publish("photobooth/oc/mail/status", JSON.stringify({
+            code: "send_fail",
+            msg: "File couldn't be saved: " + attach_err_msg,
+        }) );
+    }
+
+    // now attach and then start send process
     m_o["attachments"] = attachments;
 
     transporter.sendMail(m_o, (err, info) => {
