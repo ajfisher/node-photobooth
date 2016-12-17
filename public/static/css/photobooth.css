@@ -25,7 +25,7 @@ html {
 body {
   color: #000;
   margin: 0;
-  font: 2.4rem "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 2.4rem "Helvetica Neue", Helvetica, "Liberation Sans", Arial, sans-serif;
   height: 100%;
   /* fallback */
   background-color: #AA4139;
@@ -52,10 +52,11 @@ main {
   flex-wrap: wrap;
   justify-content: flex-end; }
   main article {
-    width: 60%; }
+    width: 60%;
+    padding-top: 1.2rem; }
   main aside {
     width: 25%;
-    overflow: scroll; }
+    overflow-y: scroll; }
     main aside div#img-controls {
       text-align: center;
       margin: 0;
@@ -65,10 +66,13 @@ main {
         margin: 1.3rem 0; }
         main aside div#img-controls p a {
           cursor: pointer; }
+    main aside::-webkit-scrollbar {
+      display: none; }
 
 /** COMPONENT DEFINITIONS **/
 #c-camera div#vidstream {
-  position: relative; }
+  position: relative;
+  padding-bottom: 1.2rem; }
   #c-camera div#vidstream video, #c-camera div#vidstream canvas {
     /** flip the x-axis of the vid **/
     transform: scaleX(-1);
@@ -85,7 +89,7 @@ main {
     top: 0; }
 #c-camera p {
   text-align: center;
-  font-size: 6rem;
+  font-size: 7rem;
   padding: 0;
   margin: 0; }
   #c-camera p a {

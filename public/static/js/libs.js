@@ -1,7 +1,7 @@
 var inputVideo, animationCanvas, overlayCanvas, octx, outputCanvas, outctx;
 var faces, heads;
 
-var SNOW = true;  // turn on particle system
+var SNOW = false;  // turn on particle system
 var FACEREC = false; // turn on face detection
 var FACE_BOX = false; // turn on face boxes
 
@@ -126,16 +126,21 @@ function composite_canvases(render_image) {
 
 function initiate_video() {
     // sets up the video stream if we need it
-    navigator.getUserMedia( {
-        video: {
+    window.navigator.getUserMedia( {
+        /**video: {
             width: 640, height: 480
-        },
+        },**/
+	video: true,
     },
     function(stream) {
-        inputVideo.srcObject = stream;
-        inputVideo.onloadedmetadata = function(e) {
+	try {
+            inputVideo.src = window.URL.createObjectURL(stream);
+        } catch (err) {
+            inputVideo.src = stream;
+        }
+        /**inputVideo.onloadedmetadata = function(e) {
             inputVideo.play();
-        };
+        };**/
     },
     function(err) {
         console.log("couldn't initiate video stream");

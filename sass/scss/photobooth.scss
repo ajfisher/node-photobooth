@@ -47,11 +47,12 @@ main {
 
     article {
         width: 60%;
+        padding-top: 1.2rem;
     }
 
     aside {
         width: 25%;
-        overflow: scroll;
+        overflow-y: scroll;
 
         div#img-controls {
             text-align: center;
@@ -67,6 +68,9 @@ main {
                 }
             }
         }
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 }
 
@@ -74,6 +78,7 @@ main {
 #c-camera {
 	div#vidstream {
 		position: relative;
+                padding-bottom: 1.2rem;
 
 		video, canvas {
 			/** flip the x-axis of the vid **/
@@ -96,7 +101,7 @@ main {
 
     p {
         text-align: center;
-        font-size: 6rem;
+        font-size: 7rem;
         padding: 0;
         margin: 0;
 
