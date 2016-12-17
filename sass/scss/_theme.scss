@@ -45,6 +45,10 @@ p {
 	font-size: 2rem;
 }
 
+a.c-button {
+    cursor: pointer;
+}
+
 /** reset for chrome auto styles **/
 input:focus {
     outline: none;

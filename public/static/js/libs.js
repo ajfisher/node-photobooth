@@ -1,11 +1,9 @@
-var inputVideo, animationCanvas, overlayCanvas, octx, outputCanvas, outctx, faces;
+var inputVideo, animationCanvas, overlayCanvas, octx, outputCanvas, outctx;
+var faces, heads;
 
-var camera, scene, renderer, particles, geometry, materials = [],
-    parameters, i, h, color, sprite, size;
-
-var half_width, half_height;
-
-var heads;
+var SNOW = true;  // turn on particle system
+var FACEREC = false; // turn on face detection
+var FACE_BOX = false; // turn on face boxes
 
 var propdir = "/static/img/"
 var props = {
@@ -33,121 +31,41 @@ var props = {
 
 var current_prop = props.elfhat;
 
-var NO_PARTICLES = 20;
-
 var countdown = 3;
 
-function three_init() {
-
-    var canv = animationCanvas;
-
-    half_width = canv.width / 2;
-    half_height = canv.height / 2;
-    scene = new THREE.Scene();
-
-    geometry = new THREE.Geometry();
-
-    camera = new THREE.PerspectiveCamera( 75, canv.width / canv.height, 1, 2000 );
-    camera.position.z = 1000;
-
-	var textureLoader = new THREE.TextureLoader();
-
-	sprite = textureLoader.load( "/static/img/snowflake7_alpha.png" );
-
-	for ( i = 0; i < NO_PARTICLES; i ++ ) {
-
-		var particle = new THREE.Vector3();
-		particle.x = (Math.random() * canv.width*2 - canv.width) * 1.25;
-		particle.y = (Math.random() * canv.height*2 - canv.height) * 1.25;
-		particle.z = (Math.random() * canv.width*2 - canv.width) * 1.25;
-
-		geometry.vertices.push(particle);
-	}
-
-	parameters = [
-		[ [1.0, 0.2, 0.5], sprite, 7 ],
-		[ [0.90, 0.05, 0.5], sprite, 15 ],
-		[ [0.85, 0, 0.5], sprite, 24 ],
-	];
-
-	for ( i = 0; i < parameters.length; i ++ ) {
-
-		color  = parameters[i][0];
-		sprite = parameters[i][1];
-		size   = parameters[i][2];
-
-		materials[i] = new THREE.PointsMaterial( {
-            color: color,
-			size: size,
-			map: sprite,
-            blending: THREE.AdditiveBlending,
-            depthTest: false,
-            transparent : true
-        } );
-
-		materials[i].color.setHSL( color[0], color[1], color[2] );
-
-		particles = new THREE.Points( geometry, materials[i] );
-
-		particles.rotation.x = Math.random() * 1;
-		particles.rotation.y = Math.random() * 1;
-		particles.rotation.z = Math.random() * 7;
-
-        particles.sortParticles = true;
-
-		scene.add( particles );
-	}
-
-    renderer = new THREE.WebGLRenderer({canvas: canv, alpha: true});
-    renderer.setClearColor( 0x000000, 0);
-    renderer.setSize( canv.width, canv.height );
-
-}
-
-function particle_animator() {
-    // deals with all of the particle animations
-    //
-	var time = Date.now() * 0.00005;
-
-    particles.rotation.y += 0.01;
-    particles.rotation.x += 0.05;
-    particles.rotation.z += 0.01;
-
-	for ( i = 0; i < scene.children.length; i ++ ) {
-    	var object = scene.children[i];
-
-        if ( object instanceof THREE.Points ) {
-
-            object.rotation.y = time * ( i < 4 ? i + 1 : - ( i + 1 ) );
-        }
-    }
-}
-
 function animate() {
+    // do the relevant animation steps if needed.
 
     requestAnimationFrame( animate );
 
-    particle_animator();
-
     overlays();
 
-    renderer.render( scene, camera );
+    if (SNOW) {
+        particle_animator();
+        renderer.render( scene, camera );
+    }
+
 }
 
 function overlays() {
-    // generate any overlays
+    // generate any overlays that are required
 
-    //draw_face_boxes(head);
     octx.clearRect(0, 0, outputCanvas.width, outputCanvas.height);
-    if (typeof(heads) !== 'undefined') {
-        heads.forEach(function(head) {
-            octx.save();
-            // translate the context to the specific point where you want to draw the boxes.
-            draw_prop(current_prop, head, octx);
-            //draw_face_box(head);
 
-            octx.restore();
-        });
+    if (FACEREC) {
+        if (typeof(heads) !== 'undefined') {
+            heads.forEach(function(head) {
+                octx.save();
+                // translate the context to the specific point where you want
+                // to draw the boxes.
+                draw_prop(current_prop, head, octx);
+                if (FACE_BOX) {
+                    draw_face_box(head);
+                }
+
+                octx.restore();
+            });
+        }
     }
 }
 
@@ -175,136 +93,61 @@ function draw_face_box(head) {
 
 function take_snapshot() {
 
-    //animate();
-    //var img = new Image;
-    //img.src = renderer.domElement.toDataURL('image/png');;
+    if (SNOW) {
+        // we need to render an animation frame to make sure the frame buffer
+        // is good then load it into an image and copy that to the canvas context
+        animate();
+        var img = new Image;
+        img.src = renderer.domElement.toDataURL('image/png');;
 
-    //img.onload = function() {
-        outctx.drawImage(inputVideo, 0, 0);
-        outctx.drawImage(overlayCanvas, 0, 0, 480, 360, 0, 0, 640, 480);
-        //outctx.drawImage(img, 0, 0, 480, 360, 0, 0, 640, 480);
-
-        data_uri = outputCanvas.toDataURL("image/jpeg", 1.0);
-
-        // create the container to display the items
-        var li = document.createElement('li');
-
-        // create the delete link
-        var dl = document.createElement('a');
-        dl.setAttribute("onclick", "remove_image(this)");
-        dl.innerHTML = "<i class=\"fa fa-times-circle\"></i>";
-        li.appendChild(dl);
-
-        // create the image object
-        var i = document.createElement('img');
-        i.setAttribute('src', data_uri);
-        li.appendChild(i);
-
-        document.getElementById('c-results').appendChild(li);
-    //};
-
-    document.querySelector('#img-controls').classList.remove("hide");
-}
-
-function remove_image(el) {
-    // remove the image from the results list
-
-    var li = el.parentElement;
-    var results_list = li.parentElement;
-    results_list.removeChild(li);
-
-    if (document.querySelectorAll("ul#c-results li").length == 0) {
-        document.querySelector('#img-controls').classList.add("hide");
+        img.onload = function() {
+            composite_canvases(img);
+            update_image_list();
+        };
+    } else {
+        composite_canvases();
+        update_image_list();
     }
 }
 
-function clear_all_images() {
-    // removes all of the images from the result lists
+function composite_canvases(render_image) {
+    // composites the images together as required
+    // render image provided optionally
+    outctx.drawImage(inputVideo, 0, 0);
+    outctx.drawImage(overlayCanvas, 0, 0, 480, 360, 0, 0, 640, 480);
 
-    Array.prototype.slice.call(document.querySelectorAll("ul#c-results li")).forEach(function(el) {
-        el.parentElement.removeChild(el);
+    if (SNOW) {
+        outctx.drawImage(render_image, 0, 0, 480, 360, 0, 0, 640, 480);
+    }
+
+    data_uri = outputCanvas.toDataURL("image/jpeg", 1.0);
+}
+
+
+function initiate_video() {
+    // sets up the video stream if we need it
+    navigator.getUserMedia( {
+        video: {
+            width: 640, height: 480
+        },
+    },
+    function(stream) {
+        inputVideo.srcObject = stream;
+        inputVideo.onloadedmetadata = function(e) {
+            inputVideo.play();
+        };
+    },
+    function(err) {
+        console.log("couldn't initiate video stream");
+        console.log(err);
     });
 
-    document.querySelector('#img-controls').classList.add("hide");
-}
-
-function do_countdown() {
-    // do the countdown process
-
-    var countdown_obj = document.getElementById("countdown");
-    countdown_obj.classList.remove("shrinktext");
-    void countdown_obj.offsetWidth; // trigger reset for animation
-
-    if (countdown == 0) {
-        countdown_obj.innerHTML = "";
-        countdown = 3;
-        take_snapshot();
-    } else {
-        countdown_obj.innerHTML = countdown;
-        countdown--;
-        countdown_obj.classList.add("shrinktext");
-        setTimeout(do_countdown, 900);
-    }
-
-}
-
-function send_image() {
-
-    var email = document.getElementById("email").value;
-
-    var images = document.querySelectorAll('#c-results img');
-
-    var payload_images = [];
-
-    if (images.length > 0) {
-        images.forEach(function(img) {
-            payload_images.push(img.src);
-        });
-    }
-
-    var payload = {
-        email: email,
-        images: payload_images,
-    };
-
-    messaging.client.publish("photobooth/ic/mail", JSON.stringify(payload));
-    status_update("Sending photos...");
-
-    close_panel();
-}
-
-function close_panel() {
-
-    var send_panel = document.getElementById("c-send-panel");
-    send_panel.classList.remove("show");
-    send_panel.classList.add("hide");
-}
-
-function capture_email() {
-
-    var send_panel = document.getElementById("c-send-panel");
-
-    send_panel.classList.add("show");
-    send_panel.classList.remove("hide");
-}
-
-function status_update(message) {
-    // updates the status bar with the current message
-    var messagebar = document.getElementById('message');
-    messagebar.classList.remove('hide');
-    messagebar.classList.add('show');
-    messagebar.classList.add('fadeout');
-    document.getElementById('status').innerHTML = message;
-
-    window.setTimeout(function() {
-        messagebar.classList.remove("show");
-        messagebar.classList.remove("fadeout");
-        messagebar.classList.add("hide");
-    }, 4800);
 }
 
 function photobooth_init() {
     // run this to initialise various callbacks etc.
+
+    console.log("Setting up with, FACE REC: %s SNOW: %s", FACEREC, SNOW);
 
     // load the various images in.
     for (var prop in props) {
@@ -314,6 +157,7 @@ function photobooth_init() {
             p.img.src = p.file;
 
             p.onLoad = function(i) {
+                // add any further handling in here
 
             }(p.img);
         }
@@ -336,24 +180,33 @@ function photobooth_init() {
 	outctx.translate(outputCanvas.width, 0);
 	outctx.scale(-1, 1);
 
-	faces = new tracking.ObjectTracker(['face']);
-	faces.setInitialScale(4);
-	faces.setStepSize(2);
-	faces.setEdgesDensity(0.1);
+    if (FACEREC) {
 
-	faces.on('track', function(event) {
-		if (event.data.length === 0) {
-			// No objects were detected in this frame.
-		} else {
-			heads = event.data;
-		}
-	});
+        faces = new tracking.ObjectTracker(['face']);
+        faces.setInitialScale(4);
+        faces.setStepSize(2);
+        faces.setEdgesDensity(0.1);
 
-	tracking.track(inputVideo, faces, { camera: true });
+        faces.on('track', function(event) {
+            if (event.data.length === 0) {
+                // No objects were detected in this frame.
+            } else {
+                heads = event.data;
+            }
+        });
 
-	// start up the animation etc.
-	//three_init();
-	//animate();
+        tracking.track(inputVideo, faces, { camera: true });
+    } else {
+        initiate_video();
+    }
+
+	// start up the particle system if needed.
+    if (SNOW) {
+	    three_init();
+    }
+
+    // start any animation sequences that are needed
+	animate();
 
 }
 
