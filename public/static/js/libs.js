@@ -175,14 +175,14 @@ function draw_face_box(head) {
 
 function take_snapshot() {
 
-    animate();
-    var img = new Image;
-    img.src = renderer.domElement.toDataURL('image/png');;
+    //animate();
+    //var img = new Image;
+    //img.src = renderer.domElement.toDataURL('image/png');;
 
-    img.onload = function() {
+    //img.onload = function() {
         outctx.drawImage(inputVideo, 0, 0);
         outctx.drawImage(overlayCanvas, 0, 0, 480, 360, 0, 0, 640, 480);
-        outctx.drawImage(img, 0, 0, 480, 360, 0, 0, 640, 480);
+        //outctx.drawImage(img, 0, 0, 480, 360, 0, 0, 640, 480);
 
         data_uri = outputCanvas.toDataURL("image/jpeg", 1.0);
 
@@ -201,7 +201,7 @@ function take_snapshot() {
         li.appendChild(i);
 
         document.getElementById('c-results').appendChild(li);
-    };
+    //};
 
     document.querySelector('#img-controls').classList.remove("hide");
 }
@@ -352,8 +352,8 @@ function photobooth_init() {
 	tracking.track(inputVideo, faces, { camera: true });
 
 	// start up the animation etc.
-	three_init();
-	animate();
+	//three_init();
+	//animate();
 
 }
 
