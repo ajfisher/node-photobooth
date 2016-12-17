@@ -56,11 +56,21 @@ function do_countdown() {
         take_snapshot();
     } else {
         countdown_obj.innerHTML = countdown;
+        if (countdown == 1) {
+            // we need to fire the lights off
+            setTimeout(fire_lights, 750);
+            console.log("lights");
+        }
         countdown--;
         countdown_obj.classList.add("shrinktext");
         setTimeout(do_countdown, 900);
     }
+}
 
+function fire_lights() {
+    // fire a message that the lights will happen
+
+    messaging.client.publish("photobooth/ic/flash", "true");
 }
 
 function send_image() {
