@@ -46,3 +46,16 @@ node leds.js
 ```
 
 Will expose Node Pixel LEDS to the system to be able to create a flash.
+
+## Remote set up
+
+```
+screen
+cd ~/node-photobooth
+./utils/start_pi.sh
+export DISPLAY=:0
+chromium-browser --kiosk --app=http://localhost:3000/index.html &
+```
+
+You may want a physical or onscreen keyboard to be able to type the email
+addresses.
