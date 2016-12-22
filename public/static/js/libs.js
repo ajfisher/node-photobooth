@@ -57,7 +57,7 @@ var props = {
         ],
     },
     present: {
-        active: true,
+        active: false,
         file: propdir + "present.svg",
         img: new Image(),
         origin: {
