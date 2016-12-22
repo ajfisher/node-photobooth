@@ -56,6 +56,28 @@ var props = {
             },
         ],
     },
+    present: {
+        active: true,
+        file: propdir + "present.svg",
+        img: new Image(),
+        origin: {
+            x: 0.5, y: 0.95
+        },
+        locs: [
+            {
+                x: 0.35, y: 1.0,
+                h: 0.15,
+            },
+            {
+                x: 0.65, y: 1.0,
+                h: 0.10,
+            },
+            {
+                x: 0.58, y: 1.0,
+                h: 0.08,
+            },
+        ],
+    },
      wreath: {
         active: false,
         file: propdir + "wreath.svg",
