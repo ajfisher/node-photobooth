@@ -66,6 +66,7 @@ main {
                     max-height: 75px;
 
                     &.off {
+                        -webkit-filter: grayscale(1);
                         filter: grayscale(100%);
                     }
                 }

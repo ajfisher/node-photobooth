@@ -66,6 +66,7 @@ main {
         main nav ul li img {
           max-height: 75px; }
           main nav ul li img.off {
+            -webkit-filter: grayscale(1);
             filter: grayscale(100%); }
   main article {
     max-width: 480px;
