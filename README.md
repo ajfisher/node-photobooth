@@ -59,3 +59,7 @@ chromium-browser --kiosk --app=http://localhost:3000/index.html &
 
 You may want a physical or onscreen keyboard to be able to type the email
 addresses.
+
+## Acknowledgements:
+
+Icons made by <a href="http://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">Madebyoliver</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
