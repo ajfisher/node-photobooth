@@ -1,4 +1,20 @@
 // Functions to deal with the various UI handlers etc.
+var countdown = 3;
+
+
+function toggle_prop(prop) {
+    // takes a prop and toggles it on or off
+
+    props[prop].active = ! props[prop].active;
+
+    var icon = document.getElementById(prop);
+    if (props[prop].active) {
+        icon.classList.remove("off");
+    } else {
+        icon.classList.add("off");
+    }
+
+}
 
 function update_image_list() {
     // updates the lists of images on the right hand side.
@@ -41,6 +57,16 @@ function clear_all_images() {
     });
 
     document.querySelector('#img-controls').classList.add("hide");
+}
+
+function initiate_countdown () {
+    // used to initiate the countdown and only if it hasn't
+    // started already.
+
+    if (countdown == 3) {
+        do_countdown();
+    }
+
 }
 
 function do_countdown() {
