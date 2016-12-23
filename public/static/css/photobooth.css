@@ -53,21 +53,10 @@ main {
   justify-content: space-between; }
   main nav {
     min-width: 15%;
-    flex-grow: 2; }
-    main nav ul {
-      padding: 0;
-      margin: 0;
-      list-style: none; }
-      main nav ul li {
-        padding: 1.2rem;
-        padding-bottom: 0; }
-        main nav ul li:last-child {
-          padding-bottom: 1.2rem; }
-        main nav ul li img {
-          max-height: 75px; }
-          main nav ul li img.off {
-            -webkit-filter: grayscale(1);
-            filter: grayscale(100%); }
+    flex-grow: 2;
+    overflow-y: scroll; }
+    main nav::-webkit-scrollbar {
+      display: none; }
   main article {
     max-width: 480px;
     padding-top: 1.2rem; }
@@ -127,26 +116,35 @@ main {
     font-size: 20rem;
     animation: shrinktext 0.6s linear 1 forwards; }
 
-ul#c-results {
+main ul {
   list-style: none;
   margin: 0;
   padding: 0; }
-  ul#c-results li {
+  main ul li {
     padding: 1.2rem;
-    padding-bottom: 0;
-    position: relative; }
-    ul#c-results li img {
-      width: 100%;
-      display: block; }
-    ul#c-results li:last-child {
+    padding-bottom: 0; }
+    main ul li:last-child {
       padding-bottom: 1.2rem; }
-    ul#c-results li a {
-      position: absolute;
-      left: 0.6rem;
-      top: 0rem;
-      font-size: 3rem;
-      cursor: pointer;
-      color: rgba(255, 255, 255, 0.5); }
+
+ul#c-results li {
+  position: relative; }
+  ul#c-results li img {
+    width: 100%;
+    display: block; }
+  ul#c-results li a {
+    position: absolute;
+    left: 0.6rem;
+    top: 0rem;
+    font-size: 3rem;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.5); }
+
+nav ul li img {
+  max-height: 75px;
+  cursor: pointer; }
+  nav ul li img.off {
+    -webkit-filter: grayscale(1);
+    filter: grayscale(100%); }
 
 div#c-send-panel {
   position: absolute;
