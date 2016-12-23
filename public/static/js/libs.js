@@ -22,10 +22,10 @@ var props = {
             x: 0.5, y: 1.0
         },
         locs: [
-            {
-                x: 0.5, y: 1.0,
-                h: 0.65,
-            },
+        {
+            x: 0.5, y: 1.0,
+            h: 0.65,
+        },
         ],
     },
     mistletoe: {
@@ -36,10 +36,10 @@ var props = {
             x: 0.5, y: 0.0,
         },
         locs: [
-            {
-                x: 0.5, y: 0.0,
-                h: 0.25,
-            },
+        {
+            x: 0.5, y: 0.0,
+            h: 0.25,
+        },
         ],
     },
     sleigh: {
@@ -50,10 +50,10 @@ var props = {
             x: 0.5, y: 0.85
         },
         locs: [
-            {
-                x: 0.5, y: 1.0,
-                h: 0.75,
-            },
+        {
+            x: 0.5, y: 1.0,
+            h: 0.75,
+        },
         ],
     },
     present: {
@@ -64,21 +64,21 @@ var props = {
             x: 0.5, y: 0.95
         },
         locs: [
-            {
-                x: 0.35, y: 1.0,
-                h: 0.15,
-            },
-            {
-                x: 0.65, y: 1.0,
-                h: 0.10,
-            },
-            {
-                x: 0.58, y: 1.0,
-                h: 0.08,
-            },
+        {
+            x: 0.35, y: 1.0,
+            h: 0.15,
+        },
+        {
+            x: 0.65, y: 1.0,
+            h: 0.10,
+        },
+        {
+            x: 0.58, y: 1.0,
+            h: 0.08,
+        },
         ],
     },
-     wreath: {
+    wreath: {
         active: false,
         file: propdir + "wreath.svg",
         img: new Image(),
@@ -86,10 +86,28 @@ var props = {
             x: 0.5, y: 0.5,
         },
         locs: [
-            {
-                x: 0.5, y: 0.5,
-                h: 0.90,
-            },
+        {
+            x: 0.5, y: 0.5,
+            h: 0.90,
+        },
+        ],
+    },
+    stocking: {
+        active: true,
+        file: propdir + "stocking.svg",
+        img: new Image(),
+        origin: {
+            x: 0.5, y: 0.0,
+        },
+        locs: [
+        {
+            x: 0.10, y: 0.20,
+            h: 0.25,
+        },
+        {
+            x: 0.24, y: 0.22,
+            h: 0.25,
+        },
         ],
     },
 };
@@ -169,6 +187,7 @@ function draw_prop(prop, ctx, canv) {
 
         //console.log(canv_h, prop.img.height, prop.img.height * sf, sf, dy, dh, (prop.origin.y * sf));
         ctx.drawImage(prop.img, dx, dy, dw, dh);
+
     });
 
 }
