@@ -10,9 +10,32 @@ function toggle_prop(prop) {
     var icon = document.getElementById(prop);
     if (props[prop].active) {
         icon.classList.remove("off");
+
+        // if we're turning on also do a random position allocation if needed
+        if (props[prop].random_locs) {
+            console.log("Adding snow");
+
+            var p = props[prop];
+            p.locs = [];
+
+            for (var i = 0; i < p.loc_settings.number; i++) {
+
+                var l = {
+                    x: Math.random(),
+                    y: Math.random(),
+                    h: (Math.random() * p.loc_settings.size.max) + p.loc_settings.size.min,
+                }
+
+                p.locs.push(l);
+            }
+
+            console.log(p);
+
+        }
     } else {
         icon.classList.add("off");
     }
+
 
 }
 

@@ -44,6 +44,7 @@ var props = {
     },
     sleigh: {
         active: false,
+        flip: true,
         file: propdir + "sleigh.svg",
         img: new Image(),
         origin: {
@@ -93,7 +94,8 @@ var props = {
         ],
     },
     stocking: {
-        active: true,
+        active: false,
+        flip: true,
         file: propdir + "stocking.svg",
         img: new Image(),
         origin: {
@@ -110,10 +112,24 @@ var props = {
         },
         ],
     },
+    snowflake: {
+        active: false,
+        file: propdir + "snowflake.svg",
+        img: new Image(),
+        origin: {
+            x: 0.5, y: 0.5,
+        },
+        random_locs: true,
+        loc_settings: {
+            number: 10,
+            size: {
+                min: 0.05,
+                max: 0.15,
+            }
+        },
+        locs: [],
+    },
 };
-
-var current_prop = props.wreath;
-//var current_prop = props.tree;
 
 function animate() {
     // do the relevant animation steps if needed.
@@ -164,9 +180,11 @@ function draw_prop(prop, ctx, canv) {
 
     canv_h = canv.height;
     canv_w = canv.width;
+    canv_half_w = canv_w / 2;
 
     prop_h = prop.img.height;
     prop_w = prop.img.width;
+
 
     prop.locs.forEach(function(loc) {
         // go through each location that the prop needs to be put and
@@ -185,8 +203,18 @@ function draw_prop(prop, ctx, canv) {
         var dx = (canv_w * loc.x) - (prop.origin.x * dw);
         var dy = (canv_h * loc.y) - (prop.origin.y * dh);
 
-        //console.log(canv_h, prop.img.height, prop.img.height * sf, sf, dy, dh, (prop.origin.y * sf));
+        //console.log(canv_h, prop.img.height, prop.img.height * sf, sf, dy, dh, (prop.origin.y * sf))
+        ctx.save();
+        // do a flip if needed
+        if (prop.flip) {
+            ctx.translate(canv_half_w, 0);
+            ctx.scale(-1, 1);
+            ctx.translate(-canv_half_w, 0);
+        }
+
         ctx.drawImage(prop.img, dx, dy, dw, dh);
+        ctx.restore();
+
 
     });
 
